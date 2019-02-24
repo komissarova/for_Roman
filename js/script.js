@@ -5,8 +5,8 @@ let basket = {
 
   countTotalPrice() {
     let result = 0;
-    for (let i = 0; i < this.goodList[0].length; i++) {
-      result += this.goodList[0][i].price * this.goodList[0][i].count;
+    for (let i = 0; i < this.goodList.length; i++) {
+      result += this.goodList[i].price * this.goodList[i].count;
     }
 
     return result;
@@ -14,16 +14,17 @@ let basket = {
 
   countTotalNumber() {
     let totalNumber = 0;
-    for (let i = 0; i < this.goodList[0].length; i++) {
-      totalNumber += this.goodList[0][i].count;
+    for (let i = 0; i < this.goodList.length; i++) {
+      totalNumber += this.goodList[i].count;
     }
 
     return totalNumber;
   },
 
-  putToBasket(obj) {
+  putToBasket(obj) { //функцию необходимо переписать на перебор массива и присвоение его данных в новый массив. Сейчас массив переносится ссылкой
     //let putGood = this.goodList.concat(obj);
-    return this.goodList.concat(obj);
+    //return this.goodList.concat(obj);
+    this.goodList = goods;
   }
 };
 
@@ -92,16 +93,16 @@ let goods = [{
   }
 ];
 
-console.log(basket.putToBasket(goods));
+//console.log(basket.putToBasket(goods));
 //старый код не заполняет корзину
 // basket.goodList.push({
 //   name: this.name,
 //   price: this.price
 // });
 //
-basket.goodList.push(basket.putToBasket(goods)); //так в карзину кладём массив объектов
-console.log(basket.goodList[0]);
-console.log(basket.goodList[0].count);
+//basket.goodList.push(basket.putToBasket(goods)); //так в карзину кладём массив объектов
+console.log(basket.goodList);
+// console.log(basket.goodList[0].count);
 //console.log(basket.goodList[1].count);
 
 // let odd = [];
@@ -135,37 +136,34 @@ console.log(basket.goodList[0].count);
 // console.log(getRandomArray(odd, 2));
 // console.log(getRandomArray(even, 1));
 
-console.log("Стоимость всех товаров в Вашей корзине: " + basket.countTotalPrice());
-console.log("Всего товаров в Вашей корзине: " + basket.countTotalNumber());
+//console.log("Стоимость всех товаров в Вашей корзине: " + basket.countTotalPrice());
+//console.log("Всего товаров в Вашей корзине: " + basket.countTotalNumber());
 
 
 let myBasket = document.getElementById("myBasket");
-if (basket.goodList == 0) {
-  myBasket.innerText = "Корзина пуста";
-} else {
-  myBasket.innerText = "В корзине: " + basket.countTotalNumber() + " товаров на сумму " + basket.countTotalPrice() + " рублей";
-  console.log(myBasket);
-}
+renderSumm();
 
+function renderSumm() {
+  if (basket.goodList == 0) {
+    myBasket.innerText = "Корзина пуста";
+  } else {
+    myBasket.innerText = "В корзине: " + basket.countTotalNumber() + " товаров на сумму " + basket.countTotalPrice() + " рублей";
+    //console.log(myBasket);
+
+  }
+
+};
 
 let myButton = document.createElement("button");
-console.log(myButton);
+//console.log(myButton);
 document.body.appendChild(myButton);
 myButton.innerHTML = "Купить";
 myButton.style.color = "red";
 myButton.setAttribute("id", "buy_button");
 
-let myGood = document.createElement("ul");
-document.body.insertBefore(myGood, myButton);
-myGood.innerHTML = "Товар: ";
-myGood.setAttribute("id", "good_list");
-
-
 let listItem = document.createElement("li");
 
-myGood.appendChild(listItem);
-listItem.setAttribute("class", "good_item");
-let products = document.getElementsByClassName("good_item");
+
 //переменная i не объявлена
 //products.innerHTML = "<li>" + basket.goodList[i].name + basket.goodList[i].price + basket.goodList[i].count + "</li>";
 
@@ -173,10 +171,19 @@ myButton.addEventListener('click', function(event) {
   //alert("Кошка");
   basket.putToBasket(goods);
   let placeForGoods = document.getElementById("good_list");
-  placeForGoods = "";
-  placeForGoods += "<ul>";
-  for (let i = 0; i < basket.goodList[0].length; i++) {
-    placeForGoods += "<li>" + basket.goodList[0][i].name + basket.goodList[0][i].price + basket.goodList[0][i].count + "</li>";
-  }
-  console.log(basket.goodList[0]);
+  placeForGoods = "<li>Name Price Count</li>";
+  //placeForGoods += "<ul>";
+  for (let i = 0; i < basket.goodList.length; i++) {
+    placeForGoods += "<li>" + basket.goodList[i].name + ' ' + basket.goodList[i].price + ' ' + basket.goodList[i].count + "</li>";
+  };
+  //Рисуем список товара
+  let myGood = document.createElement("ul");
+  document.body.insertBefore(myGood, myButton);
+  myGood.innerHTML = "Товар: " + placeForGoods; //обязательно добавляем переменную со списком товара.
+  myGood.setAttribute("id", "good_list");
+  myGood.appendChild(listItem);
+  listItem.setAttribute("class", "good_item");
+  let products = document.getElementsByClassName("good_item");
+  //renderSumm();
+  console.log(basket.goodList);
 })
